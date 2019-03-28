@@ -1,6 +1,16 @@
 ﻿module ICPC
 open System
 
+let applyRuleOne input = //Used in the commaSprinkler function below
+//applies Dr.Sprinkler's first rule
+    let input = failwith "Function not implemented"
+    input
+
+let applyRuleTwo input = //Used in the commaSprinkler function below
+//applies Dr.Sprinkler's second rule
+    let input = failwith "Function not implemented"
+    input 
+
 let commaSprinkler input =
     failwith "Not implemented"
 
