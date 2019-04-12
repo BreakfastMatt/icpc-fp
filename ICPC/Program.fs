@@ -4,38 +4,32 @@ open System
 let applyRuleOne (input: string) = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
-    ///// potential vars 
     let n = 0;
-    let count = 0; 
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
 
-    let findPos (st1: string) (st2: string) =
+    let word = FindWord (noCommas.[0].Split()|> Array.toList) //word next to the comma 
+
+    let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
       st1.IndexOf(st2)
     
-    let AddComm (pos: int)(words:string) =
+    let AddComm (pos: int)(words:string) =  // adds comma in desired place 
       words.Insert(pos, ",")
-    
-    
-    //this is the idea now figure out the iteration!!!
-    let commas = 
-       let word = FindWord (noCommas.[0].Split()|> Array.toList)
-       let pos = findPos (noCommas.[1]) (word)
-       let NewString =  noCommas.[0] + AddComm (pos + word.Length) noCommas.[1]
+  
+    let commas n (xs: List<string>) =  //  applies important functions 
+       let pos = findPos (xs.[n]) (word)
+       let NewString =  AddComm (pos + word.Length) xs.[n]
        NewString
+    
+    let rec addCommas (xs: List<string>) word nString n = // applies the commas function to each element of the list but this could 
+      match n < xs.Length  with                           // have been done with the List functions 
+       |false -> nString
+       |_ -> addCommas xs word (nString + commas n xs) (n+1)
 
-    commas
+    addCommas noCommas word "" n
 
    
-    
-   
-    
-    
-
-    //failwith "Function not implemented"
-    //words
-
 let applyRuleTwo input = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
     let input = failwith "Function not implemented"
@@ -50,5 +44,4 @@ let rivers input =
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
-    Console.WriteLine(applyRuleOne("hello, I hello am, the man, hello okay?"))
     0 // return an integer exit code
