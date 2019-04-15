@@ -69,8 +69,15 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 let commaSprinkler input =
     failwith "Not implemented"
 
-let determineLines input lineWidth =  
+let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
+    let rec loop count lines startIndex= 
+        match (count = lineWidth) with
+        |true -> lines //return lines (we will use this in the rivers function below)
+        |_  ->  
+        let value = input.Substring(startIndex,lineWidth) // need to have some way to check if this will chop off a word ....
+        let lines = lines@[value] //double check that this is adding to end of line list
+        loop (count+1) lines  (startIndex+lineWidth) //need to check if startIndex + lineWidth goes over length of original input (simple check)
     failwith "Not implemented"
 
 let rivers input =
