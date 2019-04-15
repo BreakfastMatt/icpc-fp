@@ -1,22 +1,23 @@
 ﻿module ICPC
 open System
 
-let applyRuleOne (input: string) = //Used in the commaSprinkler function below
+let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
-    let n = 0;
+    
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
 
-    let word = FindWord (noCommas.[0].Split()|> Array.toList) //word next to the comma 
+    let word = FindWord (noCommas.[n].Split()|> Array.toList) //word next to the comma 
 
     let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
       st1.IndexOf(st2)
     
     let AddComm (pos: int)(words:string) =  // adds comma in desired place 
       words.Insert(pos, ",")
-  
+    
+    let n = 0
     let commas n (xs: List<string>) =  //  applies important functions 
        let pos = findPos (xs.[n]) (word)
        let NewString =
@@ -33,7 +34,6 @@ let applyRuleOne (input: string) = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
-   
 let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
@@ -66,8 +66,18 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
-let commaSprinkler input =
-    failwith "Not implemented"
+let commaSprinkler (input: string) =
+    let n = 0
+    let rec ruleThree i string = 
+       let newString = applyRuleTwo (applyRuleOne string i)
+       let old = string
+       match old = newString with 
+       |true -> newString 
+       |_ -> ruleThree (i+1) newString 
+
+    ruleThree n input
+    
+    
 
 let rivers input =
     failwith "Not implemented"
