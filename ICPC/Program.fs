@@ -69,10 +69,17 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 let commaSprinkler input =
     failwith "Not implemented"
 
+let determineLines input lineWidth =  
+//can call this function in the rivers function below to determine the different lines (based on the line width)
+    failwith "Not implemented"
+
 let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
 //Have a variable that will keep track of the max river & the width that created that river 
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
+    let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
+        let lines = determineLines input lineWidth
+        failwith "Not implemented"
     failwith "Not implemented"
 
 [<EntryPoint>]
