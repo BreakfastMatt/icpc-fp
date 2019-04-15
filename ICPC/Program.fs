@@ -79,7 +79,24 @@ let commaSprinkler (input: string) =
     
     
 
+let determineLines (input:string) lineWidth =  
+//can call this function in the rivers function below to determine the different lines (based on the line width)
+    let rec loop count lines startIndex= 
+        match (count = lineWidth) with
+        |true -> lines //return lines (we will use this in the rivers function below)
+        |_  ->  
+        let value = input.Substring(startIndex,lineWidth) // need to have some way to check if this will chop off a word ....
+        let lines = lines@[value] //double check that this is adding to end of line list
+        loop (count+1) lines  (startIndex+lineWidth) //need to check if startIndex + lineWidth goes over length of original input (simple check)
+    failwith "Not implemented"
+
 let rivers input =
+//Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
+//Have a variable that will keep track of the max river & the width that created that river 
+//(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
+    let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
+        let lines = determineLines input lineWidth
+        failwith "Not implemented"
     failwith "Not implemented"
 
 [<EntryPoint>]
