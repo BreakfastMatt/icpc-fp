@@ -66,18 +66,25 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
+type Option<'a> =
+|None 
+|Some of 'a
+
 let commaSprinkler (input: string) =
-    let n = 0
+    
+    let n = 0   
     let rec ruleThree i string = 
        let newString = applyRuleTwo (applyRuleOne string i)
        let old = string
        match old = newString with 
        |true -> newString 
-       |_ -> match i+1 < (input.Split(',')|> Array.toList).Length with  
+       |_ -> match i+1 < ((input.Split(',')|> Array.toList).Length- 1) with  
              |true -> ruleThree (i+1) newString 
              |_ -> ruleThree 0 newString
-
-    ruleThree n input
+    match input = "" || input.[0] = ' ' ||  input.[0] = '.' || input.[input.Length - 1] = ' ' || input.[input.Length - 1] = ' '  with 
+    |true -> None 
+    |_ -> Some (ruleThree n input)
+    
     
     
 
