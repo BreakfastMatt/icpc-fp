@@ -73,7 +73,9 @@ let commaSprinkler (input: string) =
        let old = string
        match old = newString with 
        |true -> newString 
-       |_ -> ruleThree (i+1) newString 
+       |_ -> match i+1 < (input.Split(',')|> Array.toList).Length with  
+             |true -> ruleThree (i+1) newString 
+             |_ -> ruleThree 0 newString
 
     ruleThree n input
     
