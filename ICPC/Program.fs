@@ -70,6 +70,9 @@ let commaSprinkler input =
     failwith "Not implemented"
 
 let rivers input =
+//Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
+//Have a variable that will keep track of the max river & the width that created that river 
+//(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
     failwith "Not implemented"
 
 [<EntryPoint>]
