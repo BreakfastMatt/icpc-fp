@@ -3,7 +3,7 @@ open System
 
 let applyRuleOne (input: string) = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
-    let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
+    let noCommas = input.Split ',' |> Array.toList // split on comma and convert the array to a list to use list functions later 
     let n = 0;
     //////////////important functions////////////
     let FindWord (p: List<string>) =
@@ -36,12 +36,12 @@ let applyRuleOne (input: string) = //Used in the commaSprinkler function below
    
 let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
-    let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
+    let noCommas = input.Split ',' |> Array.toList // split on comma and convert the array to a list to use list functions later 
     let n = noCommas.Length;
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
-
+ 
     let word = FindWord (noCommas.[0].Split()|> Array.toList) //word next to the comma 
 
     let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
@@ -69,8 +69,13 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 let commaSprinkler input =
     failwith "Not implemented"
 
-let rivers input =
-    failwith "Not implemented"
+let rivers (input:string) =
+//yeah so this is much more complicated than this...  refer to prac question thing
+//have recursive function that will adjust the line width and perform the necessary river functionality (return the length of the river and all that)
+//have a variable that will keep track of the max river & the width that created that river (update this value if you find a line width that made that)
+    let lines =  input.Split '\n'
+    lines
+    //failwith "Not implemented"
 
 [<EntryPoint>]
 let main argv =
