@@ -33,7 +33,7 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
-let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
+let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
 
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
@@ -76,7 +76,7 @@ let commaSprinkler (input: string) =
 
     let n = 0   
     let rec ruleThree i s = 
-       let newString = applyRuleTwo (applyRuleOne s i) (input.Split(',')|> Array.toList).Length
+       let newString = applyRuleTwo (applyRuleOne s i) //(input.Split(',')|> Array.toList).Length
        let old = s
        match old = newString with 
        |true -> newString 
