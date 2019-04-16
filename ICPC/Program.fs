@@ -10,7 +10,7 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
     let FindWord (p: List<string>) = //finds last word in list
       p.[p.Length-1]
 
-    let word = FindWord (noCommas.[n].Split()|> Array.toList) //word next to the comma 
+    let word = FindWord (noCommas.[n].Split(' ')|> Array.toList) //word next to the comma 
 
     let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
       st1.IndexOf(st2)
