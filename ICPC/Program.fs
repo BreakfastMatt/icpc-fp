@@ -4,9 +4,8 @@ open System
 let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
     let noCommas = input.Split ',' |> Array.toList // split on comma and convert the array to a list to use list functions later 
-    let n = 0;
     //////////////important functions////////////
-    let FindWord (p: List<string>) =
+    let FindWord (p: List<string>) = //finds last word in list
       p.[p.Length-1]
 
     let word = FindWord (noCommas.[n].Split()|> Array.toList) //word next to the comma 
