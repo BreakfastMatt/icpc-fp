@@ -3,8 +3,8 @@ open System
 
 let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
-    let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
-    
+    let noCommas = input.Split ',' |> Array.toList // split on comma and convert the array to a list to use list functions later 
+    let n = 0;
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
@@ -36,12 +36,13 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 
 let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
+
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
     
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
-
+ 
     let word = FindWord (noCommas.[0].Split()|> Array.toList) //word next to the comma 
 
     let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
@@ -68,11 +69,12 @@ let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
+
 let dotsInRow (input: string ) = //used for input validation in CommaSprinkler 
    failwith "Not Implemeted"
-   
-let commaSprinkler (input: string) =
-    
+
+let commaSprinkler (input: string) =    
+
     let n = 0   
     let rec ruleThree i s = 
        let newString = applyRuleTwo (applyRuleOne s i) (input.Split(',')|> Array.toList).Length
@@ -83,6 +85,8 @@ let commaSprinkler (input: string) =
              |true -> ruleThree (i+1) newString 
              |_ -> ruleThree 0 newString
 
+
+  
     match input with 
     |"" -> None 
     |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
@@ -90,8 +94,8 @@ let commaSprinkler (input: string) =
          |_ -> match input.[0] with 
                |' ' |'.'|',' -> None
                |_ -> match input.[input.Length - 1] with 
-                    |'.'-> Some (ruleThree n input)
-                    |_-> None
+                     |'.'-> Some (ruleThree n input)
+                     |_-> None
  
 
 
