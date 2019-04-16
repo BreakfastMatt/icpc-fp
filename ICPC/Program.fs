@@ -4,7 +4,7 @@ open System
 let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's first rule
     let noCommas = input.Split ',' |> Array.toList // split on comma and convert the array to a list to use list functions later 
-    let n = 0;
+    
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
@@ -35,7 +35,7 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
     addCommas noCommas word "" n
 
 let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
-//applies Dr.Sprinkler's second rule
+   //applies Dr.Sprinkler's second rule
 
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
     
@@ -71,7 +71,19 @@ let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
 
 
 let dotsInRow (input: string ) = //used for input validation in CommaSprinkler 
-   failwith "Not Implemeted"
+   let n = 0 
+   let count = 0;
+   let rec checkDots (sent:string) n cnt=
+      match sent.[n] = '.' with
+      |true -> match cnt+1 > 1 with 
+               |true -> cnt+1
+               |_ -> checkDots sent (n+1) cnt+1
+      |_ -> 
+       let cnt = 0
+       checkDots sent (n+1) cnt
+
+   checkDots input n 0
+ 
 
 let commaSprinkler (input: string) =    
 
