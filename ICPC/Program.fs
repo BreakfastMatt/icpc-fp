@@ -34,10 +34,10 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
-let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
+let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
-    let n = noCommas.Length;
+    
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
@@ -49,7 +49,9 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
     
     let AddComm (pos: int)(words:string) =  // adds comma in desired place 
       words.Insert(pos, ",")
-  
+
+    let n = noCommas.Length;
+
     let commas n (xs: List<string>) =  //  applies important functions 
        let pos = findPos (xs.[n]) (word) 
        let NewString =
@@ -66,28 +68,34 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 
     addCommas noCommas word "" n
 
-type Option<'a> =
-|None 
-|Some of 'a
-
+let dotsInRow (input: string ) = //used for input validation in CommaSprinkler 
+   failwith "Not Implemeted"
+   
 let commaSprinkler (input: string) =
     
     let n = 0   
-    let rec ruleThree i string = 
-       let newString = applyRuleTwo (applyRuleOne string i)
-       let old = string
+    let rec ruleThree i s = 
+       let newString = applyRuleTwo (applyRuleOne s i) (input.Split(',')|> Array.toList).Length
+       let old = s
        match old = newString with 
        |true -> newString 
        |_ -> match i+1 < ((input.Split(',')|> Array.toList).Length- 1) with  
              |true -> ruleThree (i+1) newString 
              |_ -> ruleThree 0 newString
-    match input = "" || input.[0] = ' ' ||  input.[0] = '.' || input.[input.Length - 1] = ' ' || input.[input.Length - 1] = ' '  with 
-    |true -> None 
-    |_ -> Some (ruleThree n input)
-    
-    
-    
 
+    match input with 
+    |"" -> None 
+    |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
+         |true -> None
+         |_ -> match input.[0] with 
+               |' ' |'.'|',' -> None
+               |_ -> match input.[input.Length - 1] with 
+                    |'.'-> Some (ruleThree n input)
+                    |_-> None
+ 
+
+
+   
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
     let rec loop count lines startIndex= 
