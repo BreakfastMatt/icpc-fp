@@ -76,11 +76,25 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
     addCommas noCommas word "" n
 
 
-let dotsInRow (input: string ) = //used for input validation in CommaSprinkler 
+let multiDots (input: string ) = //used for input validation in CommaSprinkler 
    let n = 0 
-   let count = 0;
    let rec checkDots (sent:string) n cnt=
       match sent.[n] = '.' with
+      |true -> match cnt+1 > 1 with 
+               |true -> cnt+1
+               |_ -> match n+1 < sent.Length  with 
+                     |true -> checkDots sent (n+1) cnt+1
+                     |false -> cnt
+      |_ -> 
+       let cnt = 0
+       checkDots sent (n+1) cnt
+
+   checkDots input n 0
+
+let multiSpace (input: string ) = //used for input validation in CommaSprinkler 
+   let n = 0 
+   let rec checkDots (sent:string) n cnt=
+      match sent.[n] = ' ' with
       |true -> match cnt+1 > 1 with 
                |true -> cnt+1
                |_ -> match n+1 < sent.Length  with 
@@ -99,6 +113,8 @@ let containsUpper (input: string) =
       |_ -> match input.[n] with 
             |'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z' -> let b = true 
                                                                                                                         b
+            |'?'|'>'|'<'|';'|'_' -> let b = true 
+                                    b
             |_ -> itter (n+1) b
    itter 0 false
 
@@ -119,14 +135,13 @@ let applyRules (input: string) =
              |_ -> ruleThree 0 newString
 
 
-  
     match input with 
     |"" -> None 
     |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
          |true -> None
          |_ -> match startsWithWord input with 
-               |true -> None
-               |_ -> match dotsInRow input > 1 with
+               |false -> None
+               |_ -> match multiDots input > 1 with
                      |true -> None
                      |_ -> match containsUpper input with 
                            |true -> None
@@ -142,10 +157,7 @@ let commaSprinkler (input: string) =
     match numOfSplits = 0 with
     |true -> None
     |false -> let output = applyRules input
-              match output with
-              |Some "" -> None
-              |_ -> output
-    
+              output
               
 let mapWordIndices (input:string) = //This will be used to prevent words from being chopped off in the determineLines function
 //Returns an integer list that has the word count of each word (i.e. in "The dog said hi"  it would give an indexList of: [4,
@@ -189,7 +201,7 @@ let rivers input =
          |true -> None
          |_ -> match startsWithWord input with 
                |true -> None
-               |_ -> match dotsInRow input > 1 with
+               |_ -> match multiDots input > 1 with
                      |true -> None
                      |_ -> match containsUpper input with 
                            |true -> None
