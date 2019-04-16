@@ -118,7 +118,10 @@ let commaSprinkler (input: string) =
     
     match numOfSplits = 0 with
     |true -> None
-    |false -> applyRules input
+    |false -> let output = applyRules input
+              match output with
+              |Some "" -> None
+              |_ -> output
     
               
 let mapWordIndices (input:string) = //This will be used to prevent words from being chopped off in the determineLines function
@@ -161,5 +164,4 @@ let rivers input =
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
     0 // return an integer exit code
