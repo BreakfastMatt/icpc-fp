@@ -72,11 +72,10 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 let dotsInRow (input: string ) = //used for input validation in CommaSprinkler 
    failwith "Not Implemeted"
 
-let commaSprinkler (input: string) =    
-
-    let n = 0   
+let applyRules (input: string) =
+    let n = 0  
     let rec ruleThree i s = 
-       let newString = applyRuleTwo (applyRuleOne s i) //(input.Split(',')|> Array.toList).Length
+       let newString = applyRuleTwo (applyRuleOne s i) 
        let old = s
        match old = newString with 
        |true -> newString 
@@ -91,13 +90,18 @@ let commaSprinkler (input: string) =
     |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
          |true -> None
          |_ -> match input.[0] with 
-               |' ' |'.'|',' -> None
+               |' ' |'.'|','|'?' -> None
                |_ -> match input.[input.Length - 1] with 
                      |'.'-> Some (ruleThree n input)
-                     |_-> None
- 
-
-
+                     |_-> None  
+                     
+let commaSprinkler (input: string) =    
+    let numOfSplits = (input.Split(',')|> Array.toList).Length
+    
+    match numOfSplits = 0 with
+    |true -> None
+    |false -> applyRules input
+     
    
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
