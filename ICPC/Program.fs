@@ -97,9 +97,24 @@ let commaSprinkler (input: string) =
                      |'.'-> Some (ruleThree n input)
                      |_-> None
  
+let mapWordIndices (input:string) = //This will be used to prevent words from being chopped off in the determineLines function
+//Returns an integer list that has the word count of each word (i.e. in "The dog said hi"  it would give an indexList of: [4,
+    let listOfWords = input.Split ' ' |> Array.toList
+    let maxI = listOfWords.Length
+    let Length = input.Length
+    let rec countDemWords (indexList:int list)  counter i = 
+        match i = maxI with
+        |true -> 
+        let counter = (counter + listOfWords.[i].Length + 0) //+0 is there to show that it doesn't end in a space
+        countDemWords (indexList@[counter]) counter (i+1)
+        |_ -> 
+            match counter = Length with
+            |true -> indexList
+            |_ -> 
+            let counter = (counter + listOfWords.[i].Length + 1) //+1 is there to account for spaces
+            countDemWords (indexList@[counter]) counter (i+1)
+    countDemWords [] 0 0
 
-
-   
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
     let rec loop count lines startIndex= 
@@ -109,7 +124,7 @@ let determineLines (input:string) lineWidth =
         let value = input.Substring(startIndex,lineWidth) // need to have some way to check if this will chop off a word ....
         let lines = lines@[value] //double check that this is adding to end of line list
         loop (count+1) lines  (startIndex+lineWidth) //need to check if startIndex + lineWidth goes over length of original input (simple check)
-    failwith "Not implemented"
+    loop 0 [] 0
 
 let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
