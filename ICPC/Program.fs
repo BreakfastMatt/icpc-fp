@@ -44,6 +44,7 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
 
     let noCommas = input.Split(',')|> Array.toList // split on comma and convert the array to a list to use list functions later 
     
+    
     //////////////important functions////////////
     let FindWord (p: List<string>) =
       p.[p.Length-1]
@@ -82,13 +83,29 @@ let dotsInRow (input: string ) = //used for input validation in CommaSprinkler
       match sent.[n] = '.' with
       |true -> match cnt+1 > 1 with 
                |true -> cnt+1
-               |_ -> checkDots sent (n+1) cnt+1
+               |_ -> match n+1 < sent.Length  with 
+                     |true -> checkDots sent (n+1) cnt+1
+                     |false -> cnt
       |_ -> 
        let cnt = 0
        checkDots sent (n+1) cnt
 
    checkDots input n 0
- 
+
+let containsUpper (input: string) =
+   let rec itter n b =
+      match n < input.Length with
+      |false -> b
+      |_ -> match input.[n] with 
+            |'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z' -> let b = true 
+                                                                                                                        b
+            |_ -> itter (n+1) b
+   itter 0 false
+
+let startsWithWord (input: string)=
+    match input.[0] with
+    |'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z'-> true
+    |_ -> false 
 
 let applyRules (input: string) =
     let n = 0  
@@ -107,11 +124,17 @@ let applyRules (input: string) =
     |"" -> None 
     |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
          |true -> None
-         |_ -> match input.[0] with 
-               |' ' |'.'|','|'?' -> None
-               |_ -> match input.[input.Length - 1] with 
-                     |'.'-> Some (ruleThree n input)
-                     |_-> None  
+         |_ -> match startsWithWord input with 
+               |true -> None
+               |_ -> match dotsInRow input > 1 with
+                     |true -> None
+                     |_ -> match containsUpper input with 
+                           |true -> None
+                           |_-> match input.[input.Length - 1] with 
+                                |'.'-> Some (ruleThree n input)
+                                |_-> None  
+                        
+                     
                      
 let commaSprinkler (input: string) =    
     let numOfSplits = (input.Split(',')|> Array.toList).Length
@@ -159,8 +182,22 @@ let rivers input =
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
     let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
         let lines = determineLines input lineWidth
-        failwith "Not implemented"
-    failwith "Not implemented"
+        riverStuff 5 5
+    match input with 
+    |"" -> None 
+    |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
+         |true -> None
+         |_ -> match startsWithWord input with 
+               |true -> None
+               |_ -> match dotsInRow input > 1 with
+                     |true -> None
+                     |_ -> match containsUpper input with 
+                           |true -> None
+                           |_-> match input.[input.Length - 1] with 
+                                |'.'-> None
+                                |_-> None  
+        //failwith "Not implemented"
+    //failwith "Not implemented"
 
 [<EntryPoint>]
 let main argv =
