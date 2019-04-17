@@ -121,6 +121,7 @@ let applyRules (input: string) =
                                           |_-> Some (ruleThree n input)
                                          
 let commaSprinkler (input: string) =    
+
      let output = applyRules input
      output
               
@@ -134,13 +135,50 @@ let mapWordIndices (input:string) = //This will be used to prevent words from be
         |true -> 
         let counter = (counter + listOfWords.[i].Length + 0) //+0 is there to show that it doesn't end in a space
         countDemWords (indexList@[counter]) counter (i+1)
+
+    let numOfSplits = (input.Split(',')|> Array.toList).Length
+    
+    match numOfSplits = 0 with
+    |true -> None
+    |false -> let output = applyRules input
+              output           
+
+let addSpaces (line:string) (lineWidth:int) =
+//will populate the rest of the line with spaces (if a word is chopped off or it is the end of the line and the line is too short)
+    let lengthRemaining = lineWidth - line.Length
+    let rec addThemSpaces count (line:string) = 
+        match count=lengthRemaining with
+        |true -> line
+        |_ -> addThemSpaces (count+1) (line+" ")
+    addThemSpaces 0 line
+
+let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char) = 
+    let listOfChars = (potentialLine.ToCharArray () |> Array.toList)
+    let len = listOfChars.Length
+    match lastChar = ' ' || listOfChars.[len] = '.' with  //check what it's allowed to end in...
+    |true -> potentialLine //ends in valid char (and word not chopped off)
+    |_ -> //chopped off word
+    let rec removeChoppedWordChars (listOfChars:char list) = 
+        let Len = listOfChars.Length 
+        match (listOfChars.[Len] = ' ') with
+        |true -> listOfChars.ToString ()
+        |_ -> failwith "Not finished yet"
+        //remove last char in list somehow...
+        //removeChoppedWordChars listOfChars (Len-1)
+    removeChoppedWordChars listOfChars
+    
+    
+let chopUpIntoLines (input:string) (lineWidth:int) =  //this would replace the determineLines function below (and make mapWordIndices function obsolete)
+    let rec breakIntoLines (lines:string list) (startIndex) =
+        match ((startIndex + lineWidth) < input.Length) with
+        |false -> addSpaces (input.Substring(startIndex)) lineWidth  //should hopefully run this if it is the last line... (check)
         |_ -> 
-            match counter = Length with
-            |true -> indexList
-            |_ -> 
-            let counter = (counter + listOfWords.[i].Length + 1) //+1 is there to account for spaces
-            countDemWords (indexList@[counter]) counter (i+1)
-    countDemWords [] 0 0
+        let potentialLine = input.Substring(startIndex,lineWidth)
+        let charList = input.Substring(startIndex,lineWidth+1).ToCharArray () |> Array.toList
+        let lastChar = charList.[charList.Length]
+        failwith "Stop"
+        
+    failwith "Not finished yet"
 
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
@@ -158,7 +196,7 @@ let rivers input =
 //Have a variable that will keep track of the max river & the width that created that river 
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
     let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
-        let lines = determineLines input lineWidth
+       // let lines = determineLines input lineWidth
         riverStuff 5 5
     match input with 
     |"" -> None 
@@ -176,10 +214,4 @@ let rivers input =
 
 [<EntryPoint>]
 let main argv =
-    Console.WriteLine(applyRuleOne ("this is multiple..."))
-    Console.WriteLine(applyRuleTwo ("this is multiple..."))
-    Console.WriteLine(applyRules ("this is multiple..."))
-    Console.WriteLine(containsUpper ("this is multiple..."))
-    Console.WriteLine(endsOther ("this is multiple..."))
-   
     0 // return an integer exit code
