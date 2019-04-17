@@ -203,25 +203,33 @@ let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
 //Have a variable that will keep track of the max river & the width that created that river 
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
-    
-    let rec riverStuff lineWidth maxRiver maxWidth = //might need to add more inputs to this (idk yet)
-       let lines = chopUpIntoLines input lineWidth
-       let riverLength = failwith "this is where the determing of riverLength will happen" //this will be an integer
-       match riverLength > maxRiver with
-       |true -> riverStuff (lineWidth+1) riverLength lineWidth
-       |_ -> riverStuff (lineWidth+1) maxRiver maxWidth
-    riverStuff 1 0 0
     match input with 
     |"" -> None 
-    |_-> match input.Length < 2 with 
-         |true -> None
-         |_ -> match startsWithWord input.[0] with 
-               |true -> None
-               |_ -> match  input.Contains("..") with
-                     |true -> None
-                     |_ -> match containsUpper input with 
-                           |true -> None
-                           |_-> None 
+    |_-> 
+    match input.Length < 2 with 
+    |true -> None
+    |_ -> 
+    match startsWithWord input.[0] with 
+    |true -> None
+    |_ ->
+    match  input.Contains("..") with
+    |true -> None
+    |_ -> 
+    match containsUpper input with 
+    |false -> None
+    |_-> 
+    let rec riverStuff lineWidth maxRiver maxWidth = //might need to add more inputs to this (idk yet)
+        let lines = chopUpIntoLines input lineWidth
+        let riverLength = failwith "this is where the determing of riverLength will happen" //this will be an integer
+        match (input.Length = lineWidth) with
+        |true -> (maxRiver,maxWidth)
+        |_ -> 
+        match riverLength > maxRiver with
+        |true -> riverStuff (lineWidth+1) riverLength lineWidth
+        |_ -> riverStuff (lineWidth+1) maxRiver maxWidth
+    Some (riverStuff 1 0 0)
+    
+
 
 [<EntryPoint>]
 let main argv =
