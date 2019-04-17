@@ -157,25 +157,45 @@ let commaSprinkler (input: string) =
     match numOfSplits = 0 with
     |true -> None
     |false -> let output = applyRules input
-              output
-              
-let mapWordIndices (input:string) = //This will be used to prevent words from being chopped off in the determineLines function
-//Returns an integer list that has the word count of each word (i.e. in "The dog said hi"  it would give an indexList of: [4,
-    let listOfWords = input.Split ' ' |> Array.toList
-    let maxI = listOfWords.Length
-    let Length = input.Length
-    let rec countDemWords (indexList:int list)  counter i = 
-        match i = maxI with
-        |true -> 
-        let counter = (counter + listOfWords.[i].Length + 0) //+0 is there to show that it doesn't end in a space
-        countDemWords (indexList@[counter]) counter (i+1)
+              output           
+
+let addSpaces (line:string) (lineWidth:int) =
+//will populate the rest of the line with spaces (if a word is chopped off or it is the end of the line and the line is too short)
+    let lengthRemaining = lineWidth - line.Length
+    let rec addThemSpaces count (line:string) = 
+        match count=lengthRemaining with
+        |true -> line
+        |_ -> addThemSpaces (count+1) (line+" ")
+    addThemSpaces 0 line
+(*
+let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char) = 
+    
+    let listOfChars = (potentialLine.ToCharArray () |> Array.toList)
+    let len = listOfChars.Length
+    match lastChar = ' ' || listOfChars.[len] = '.' with  //check what it's allowed to end in...
+    |true -> potentialLine //ends in valid char (and word not chopped off)
+    |_ -> //chopped off word
+    let rec removeChoppedWordChars listOfChars = 
+        let Len = listOfChars.Length 
+        match (listOfChars.[Len] = ' ') with
+        |true -> listOfChars.ToString ()
+        |_ -> failwith "Not finished yet"
+        //remove last char in list somehow...
+        //removeChoppedWordChars listOfChars (Len-1)
+    removeChoppedWordChars listOfChars
+    
+    
+let chopUpIntoLines (input:string) (lineWidth:int) =  //this would replace the determineLines function below (and make mapWordIndices function obsolete)
+    let rec breakIntoLines (lines:string list) (startIndex) =
+        match ((startIndex + linewidth) < input.Length) with
+        |false -> addSpaces (input.Substring(startindex)) lineWidth  //should hopefully run this if it is the last line... (check)
         |_ -> 
-            match counter = Length with
-            |true -> indexList
-            |_ -> 
-            let counter = (counter + listOfWords.[i].Length + 1) //+1 is there to account for spaces
-            countDemWords (indexList@[counter]) counter (i+1)
-    countDemWords [] 0 0
+        let potentialLine = input.Substring(startIndex,lineWidth)
+        let charList = input.Substring(startIndex,lineWidth+1).ToCharArray () |> Array.toList
+        let lastChar = charList.[charList.Length]
+        failwith "Stop"
+        
+    failwith "Not finished yet"
 
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
@@ -187,13 +207,14 @@ let determineLines (input:string) lineWidth =
         let lines = lines@[value] //double check that this is adding to end of line list
         loop (count+1) lines  (startIndex+lineWidth) //need to check if startIndex + lineWidth goes over length of original input (simple check)
     loop 0 [] 0
+*)
 
 let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
 //Have a variable that will keep track of the max river & the width that created that river 
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
     let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
-        let lines = determineLines input lineWidth
+       // let lines = determineLines input lineWidth
         riverStuff 5 5
     match input with 
     |"" -> None 
