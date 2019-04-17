@@ -18,7 +18,7 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
     let AddComm (pos: int)(words:string) =  // adds comma in desired place 
       words.Insert(pos, ",")
     
-    let n = 0
+ 
     let commas n (xs: List<string>) =  //  applies important functions 
        let pos = findPos (xs.[n]) (word)
        let NewString =
@@ -33,12 +33,9 @@ let applyRuleOne (input: string) n = //Used in the commaSprinkler function below
        |false -> nString
        |_ -> addCommas xs word (nString + commas n xs) (n+1)
 
-    addCommas noCommas word "" n
+    addCommas noCommas word "" 0
 
-
-
-
-let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
+let applyRuleTwo (input: string) n = //Used in the commaSprinkler function below
 //applies Dr.Sprinkler's second rule
 
 
@@ -49,15 +46,13 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
     let FindWord (p: List<string>) =
       p.[p.Length-1]
  
-    let word = FindWord (noCommas.[0].Split()|> Array.toList) //word next to the comma 
+    let word = FindWord (noCommas.[n].Split()|> Array.toList) //word next to the comma 
 
     let findPos (st1: string) (st2: string) =  // finds where in the string the word is 
       st1.IndexOf(st2)
     
     let AddComm (pos: int)(words:string) =  // adds comma in desired place 
       words.Insert(pos, ",")
-
-    let n = noCommas.Length;
 
     let commas n (xs: List<string>) =  //  applies important functions 
        let pos = findPos (xs.[n]) (word) 
@@ -69,95 +64,65 @@ let applyRuleTwo (input: string) = //Used in the commaSprinkler function below
        NewString
     
     let rec addCommas (xs: List<string>) word nString n = // applies the commas function to each element of the list but this could 
-      match n < xs.Length  with                           // have been done with the List functions 
+      match n > 0  with                           // have been done with the List functions 
        |false -> nString
        |_ -> addCommas xs word (commas n xs + nString ) (n-1)
 
-    addCommas noCommas word "" n
-
-
-let multiDots (input: string ) = //used for input validation in CommaSprinkler 
-   let n = 0 
-   let rec checkDots (sent:string) n cnt=
-      match sent.[n] = '.' with
-      |true -> match cnt+1 > 1 with 
-               |true -> cnt+1
-               |_ -> match n+1 < sent.Length  with 
-                     |true -> checkDots sent (n+1) cnt+1
-                     |false -> cnt
-      |_ -> 
-       let cnt = 0
-       checkDots sent (n+1) cnt
-
-   checkDots input n 0
-
-let multiSpace (input: string ) = //used for input validation in CommaSprinkler 
-   let n = 0 
-   let rec checkDots (sent:string) n cnt=
-      match sent.[n] = ' ' with
-      |true -> match cnt+1 > 1 with 
-               |true -> cnt+1
-               |_ -> match n+1 < sent.Length  with 
-                     |true -> checkDots sent (n+1) cnt+1
-                     |false -> cnt
-      |_ -> 
-       let cnt = 0
-       checkDots sent (n+1) cnt
-
-   checkDots input n 0
+    addCommas noCommas word "" (noCommas.Length - 1)
 
 let containsUpper (input: string) =
    let rec itter n b =
-      match n < input.Length with
+      match n < input.Length - 1 with
       |false -> b
       |_ -> match input.[n] with 
-            |'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z' -> let b = true 
-                                                                                                                        b
-            |'?'|'>'|'<'|';'|'_' -> let b = true 
-                                    b
+            |'A'|'B'|'C'|'D'|'E'|'F'|'G'|'H'|'I'|'J'|'K'|'L'|'M'|'N'|'O'|'P'|'Q'|'R'|'S'|'T'|'U'|'V'|'W'|'X'|'Y'|'Z' -> true 
+                                                                                                                        
+            |'?'|'>'|'<'|';'|'_' -> true 
+                                    
             |_ -> itter (n+1) b
    itter 0 false
 
-let startsWithWord (input: string)=
-    match input.[0] with
+let startsWithWord (input: char) =
+    match input with
     |'a'|'b'|'c'|'d'|'e'|'f'|'g'|'h'|'i'|'j'|'k'|'l'|'m'|'n'|'o'|'p'|'q'|'r'|'s'|'t'|'u'|'v'|'w'|'x'|'y'|'z'-> true
     |_ -> false 
+
+let endsOther (input: string) = 
+   match input.[input.Length - 1 ] with 
+   |'.' -> false 
+   |_ -> true 
 
 let applyRules (input: string) =
     let n = 0  
     let rec ruleThree i s = 
-       let newString = applyRuleTwo (applyRuleOne s i) 
+       let newString = applyRuleTwo (applyRuleOne s i) i
        let old = s
        match old = newString with 
        |true -> newString 
        |_ -> match i+1 < ((input.Split(',')|> Array.toList).Length- 1) with  
              |true -> ruleThree (i+1) newString 
-             |_ -> ruleThree 0 newString
+             |_ -> ruleThree 0 newString 
 
 
     match input with 
     |"" -> None 
-    |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
+    |_-> match input.Length < 2 with 
          |true -> None
-         |_ -> match startsWithWord input with 
+         |_ -> match startsWithWord input.[0] with 
                |false -> None
-               |_ -> match multiDots input > 1 with
+               |_ -> match  input.Contains("..") with
                      |true -> None
-                     |_ -> match containsUpper input with 
-                           |true -> None
-                           |_-> match input.[input.Length - 1] with 
-                                |'.'-> Some (ruleThree n input)
-                                |_-> None  
-                        
-                     
-                     
+                     |_ -> match  input.Contains(" ") with 
+                           |true -> None 
+                           |false -> match containsUpper input with 
+                                     |true -> None
+                                     |_-> match endsOther input with 
+                                          |true -> None
+                                          |_-> Some (ruleThree n input)
+                                         
 let commaSprinkler (input: string) =    
-    let numOfSplits = (input.Split(',')|> Array.toList).Length
-    
-    match numOfSplits = 0 with
-    |true -> None
-    |false -> let output = applyRules input
-              output
+     let output = applyRules input
+     output
               
 let mapWordIndices (input:string) = //This will be used to prevent words from being chopped off in the determineLines function
 //Returns an integer list that has the word count of each word (i.e. in "The dog said hi"  it would give an indexList of: [4,
@@ -197,20 +162,24 @@ let rivers input =
         riverStuff 5 5
     match input with 
     |"" -> None 
-    |_-> match (input.Split(',')|> Array.toList).Length < 2 with 
+    |_-> match input.Length < 2 with 
          |true -> None
-         |_ -> match startsWithWord input with 
+         |_ -> match startsWithWord input.[0] with 
                |true -> None
-               |_ -> match multiDots input > 1 with
+               |_ -> match  input.Contains("..") with
                      |true -> None
                      |_ -> match containsUpper input with 
                            |true -> None
-                           |_-> match input.[input.Length - 1] with 
-                                |'.'-> None
-                                |_-> None  
+                           |_-> None 
         //failwith "Not implemented"
     //failwith "Not implemented"
 
 [<EntryPoint>]
 let main argv =
+    Console.WriteLine(applyRuleOne ("this is multiple..."))
+    Console.WriteLine(applyRuleTwo ("this is multiple..."))
+    Console.WriteLine(applyRules ("this is multiple..."))
+    Console.WriteLine(containsUpper ("this is multiple..."))
+    Console.WriteLine(endsOther ("this is multiple..."))
+   
     0 // return an integer exit code
