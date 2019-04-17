@@ -152,6 +152,14 @@ let addSpaces (line:string) (lineWidth:int) =
         |_ -> addThemSpaces (count+1) (line+" ")
     addThemSpaces 0 line
 
+let removeLastCharInList (list:char list) = 
+    let len = list.Length - 1
+    let rec createNewList newList i =
+        match i = len with
+        |true -> newList
+        |_ -> createNewList (newList@[list.[i]]) (i+1)
+    createNewList list 0
+
 let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char) = 
     let listOfChars = (potentialLine.ToCharArray () |> Array.toList)
     let len = listOfChars.Length
@@ -162,9 +170,9 @@ let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char)
         let Len = listOfChars.Length 
         match (listOfChars.[Len] = ' ') with
         |true -> listOfChars.ToString ()
-        |_ -> failwith "Not finished yet"
-        //remove last char in list somehow...
-        //removeChoppedWordChars listOfChars (Len-1)
+        |_ -> 
+        let charList = removeLastCharInList listOfChars
+        removeChoppedWordChars charList
     removeChoppedWordChars listOfChars
     
     
@@ -176,9 +184,9 @@ let chopUpIntoLines (input:string) (lineWidth:int) =  //this would replace the d
         let potentialLine = input.Substring(startIndex,lineWidth)
         let charList = input.Substring(startIndex,lineWidth+1).ToCharArray () |> Array.toList
         let lastChar = charList.[charList.Length]
-        failwith "Stop"
-        
-    failwith "Not finished yet"
+        let actualLine = addSpaces (checkIfWordChoppedOff potentialLine lineWidth lastChar) lineWidth //will run addSpaces method (just in case)
+        breakIntoLines (lines@[actualLine]) (startIndex+lineWidth)
+    breakIntoLines [] 0
 
 let determineLines (input:string) lineWidth =  
 //can call this function in the rivers function below to determine the different lines (based on the line width)
@@ -195,9 +203,14 @@ let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
 //Have a variable that will keep track of the max river & the width that created that river 
 //(only update/change this in subsequent recursive calls if you find a line width that made a larger river)
-    let rec riverStuff lineWidth maxRiver = //might need to add more inputs to this (idk yet)
-       // let lines = determineLines input lineWidth
-        riverStuff 5 5
+    
+    let rec riverStuff lineWidth maxRiver maxWidth = //might need to add more inputs to this (idk yet)
+       let lines = chopUpIntoLines input lineWidth
+       let riverLength = failwith "this is where the determing of riverLength will happen" //this will be an integer
+       match riverLength > maxRiver with
+       |true -> riverStuff (lineWidth+1) riverLength lineWidth
+       |_ -> riverStuff (lineWidth+1) maxRiver maxWidth
+    riverStuff 1 0 0
     match input with 
     |"" -> None 
     |_-> match input.Length < 2 with 
@@ -209,8 +222,6 @@ let rivers input =
                      |_ -> match containsUpper input with 
                            |true -> None
                            |_-> None 
-        //failwith "Not implemented"
-    //failwith "Not implemented"
 
 [<EntryPoint>]
 let main argv =
