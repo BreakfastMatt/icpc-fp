@@ -167,15 +167,14 @@ let addSpaces (line:string) (lineWidth:int) =
         |true -> line
         |_ -> addThemSpaces (count+1) (line+" ")
     addThemSpaces 0 line
-(*
+
 let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char) = 
-    
     let listOfChars = (potentialLine.ToCharArray () |> Array.toList)
     let len = listOfChars.Length
     match lastChar = ' ' || listOfChars.[len] = '.' with  //check what it's allowed to end in...
     |true -> potentialLine //ends in valid char (and word not chopped off)
     |_ -> //chopped off word
-    let rec removeChoppedWordChars listOfChars = 
+    let rec removeChoppedWordChars (listOfChars:char list) = 
         let Len = listOfChars.Length 
         match (listOfChars.[Len] = ' ') with
         |true -> listOfChars.ToString ()
@@ -187,8 +186,8 @@ let checkIfWordChoppedOff (potentialLine:string) (lineWidth:int) (lastChar:char)
     
 let chopUpIntoLines (input:string) (lineWidth:int) =  //this would replace the determineLines function below (and make mapWordIndices function obsolete)
     let rec breakIntoLines (lines:string list) (startIndex) =
-        match ((startIndex + linewidth) < input.Length) with
-        |false -> addSpaces (input.Substring(startindex)) lineWidth  //should hopefully run this if it is the last line... (check)
+        match ((startIndex + lineWidth) < input.Length) with
+        |false -> addSpaces (input.Substring(startIndex)) lineWidth  //should hopefully run this if it is the last line... (check)
         |_ -> 
         let potentialLine = input.Substring(startIndex,lineWidth)
         let charList = input.Substring(startIndex,lineWidth+1).ToCharArray () |> Array.toList
@@ -207,7 +206,6 @@ let determineLines (input:string) lineWidth =
         let lines = lines@[value] //double check that this is adding to end of line list
         loop (count+1) lines  (startIndex+lineWidth) //need to check if startIndex + lineWidth goes over length of original input (simple check)
     loop 0 [] 0
-*)
 
 let rivers input =
 //Have recursive function that will adjust the line width and perform the necessary river functionality (return the line width and the length of the river)
